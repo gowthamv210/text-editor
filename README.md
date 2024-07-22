@@ -1,5 +1,12 @@
 # React Text Editor
 
+## demo Images
+![image](https://github.com/user-attachments/assets/ea3251e8-4550-4dcc-bd2a-76ce6509bcf1)
+
+![image](https://github.com/user-attachments/assets/6d277daf-e4d1-413a-b951-4bfae5bde5b0)
+
+![image](https://github.com/user-attachments/assets/bc9c4416-63b6-4bf1-8307-241f084f33c0)
+
 ## Available Scripts
 
 In the project directory, you can run:
