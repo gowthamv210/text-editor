@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 const serverURL = "http://localhost:9000/fonts";
@@ -24,37 +24,25 @@ const FontFamilyList: React.FC<FontFamilyListProps> = ({
   const [fonts, setFontNames] = useState<string[]>([]);
   const [normalList, setNormalList] = useState<string[]>([]);
   const [italicList, setItalicList] = useState<string[]>([]);
-  const [normalLinks, setNormalLinks] = useState<string[]>([]);
-  const [italicLinks, setItalicLinks] = useState<string[]>([]);
+  const [index, setIndex] = useState(-1);
 
-  const updateCheckbox = () => {
+  const updateCheckbox = useCallback(() => {
     const checkbox = document.getElementById(
       "italicCheckbox"
     ) as HTMLInputElement;
     const target = `${fontWeight}italic`;
     const isPresent = italicList.some((item) => item.includes(target));
     checkbox.disabled = !isPresent;
-  };
+  }, [fontWeight, italicList]);
 
-  const loadFonts = () => {
-    const normalIndex = normalList.indexOf(fontWeight);
-    const italicIndex = italicList.indexOf(fontWeight);
+  const loadGoogleFont = (
+    fontFamily: string,
+    weight: string,
+    italic: boolean
+  ) => {
+    const style = italic ? "italic" : "normal";
+    const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily}:wght@${weight}&display=swap`;
 
-    const normalFontLink = normalIndex !== -1 ? normalLinks[normalIndex] : null;
-    const italicFontLink =
-      isItalic && italicIndex !== -1 ? italicLinks[italicIndex] : null;
-
-    if (normalFontLink) {
-      loadGoogleFont(normalFontLink);
-    }
-
-    if (italicFontLink) {
-      loadGoogleFont(italicFontLink);
-    }
-  };
-
-  const loadGoogleFont = (fontUrl: string) => {
-    // Check if the font is already loaded
     const existingLink = document.querySelector(`link[href="${fontUrl}"]`);
     if (existingLink) return;
 
@@ -63,6 +51,12 @@ const FontFamilyList: React.FC<FontFamilyListProps> = ({
     link.rel = "stylesheet";
     document.head.appendChild(link);
   };
+
+  const loadFonts = useCallback(() => {
+    if (index === -1) return;
+
+    loadGoogleFont(fontFamily, fontWeight, isItalic);
+  }, [index, fontFamily, fontWeight, isItalic]);
 
   useEffect(() => {
     const fetchFontNames = async () => {
@@ -103,8 +97,7 @@ const FontFamilyList: React.FC<FontFamilyListProps> = ({
 
         setNormalList(temp1);
         setItalicList(temp2);
-        setNormalLinks(normal);
-        setItalicLinks(italic);
+        setIndex(0);
       } catch (error) {
         console.error("Error fetching font links:", error);
       }
@@ -118,10 +111,15 @@ const FontFamilyList: React.FC<FontFamilyListProps> = ({
   useEffect(() => {
     updateCheckbox();
     loadFonts();
-  }, [fontFamily, fontWeight, isItalic, normalLinks, italicLinks]);
+  }, [fontFamily, fontWeight, isItalic, index, updateCheckbox, loadFonts]);
 
   const handleFontSelect = (value: string) => {
     setFontFamily(value);
+  };
+
+  const handleWeightSelect = (value: string, ind: number) => {
+    setFontWeight(value);
+    setIndex(ind);
   };
 
   return (
@@ -144,7 +142,9 @@ const FontFamilyList: React.FC<FontFamilyListProps> = ({
         Variant
         <select
           className="fontfamily-list"
-          onChange={(e) => setFontWeight(e.target.value)}
+          onChange={(e) =>
+            handleWeightSelect(e.target.value, e.target.selectedIndex)
+          }
           required
         >
           {normalList.map((name, index) => (

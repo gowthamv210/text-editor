@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api1/:path*",
+      "destination": "http://localhost:9000/"
+    },
+    {
+      "source": "/api2/:path*",
+      "destination": "http://localhost:9001/"
+    }
+  ]
+}

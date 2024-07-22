@@ -26,6 +26,15 @@
     "server": "json-server --watch data/fonts.json --port 9000 ",
     "server2": "json-server --watch data/endpoints.json --port 9001 "
   },
+  "proxy": {
+    "/api1": {
+      "target": "http://localhost:9000",
+      "changeOrigin": true
+    },
+    "/api2": {
+      "target": "http://localhost:9001",
+      "changeOrigin": true
+    }},
   "eslintConfig": {
     "extends": [
       "react-app",
