@@ -10,6 +10,8 @@
     "@types/node": "^16.18.103",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "axios": "^1.7.2",
+    "json-server": "^1.0.0-beta.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
@@ -20,7 +22,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "json-server --watch data/fonts.json --port 9000 ",
+    "server2": "json-server --watch data/endpoints.json --port 9001 "
   },
   "eslintConfig": {
     "extends": [
@@ -39,5 +43,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/webfontloader": "^1.6.38"
   }
 }
